@@ -1,0 +1,77 @@
+#
+# Coconut theme
+#
+# Features:
+#  - Show return codes
+#  - Show git info
+#  -
+#
+# Authors:
+#   Frank van Meeuwen <frank@frankit.it>
+#
+# Screenshots:
+#   todo
+#
+
+
+# Some cool characters
+# Coconut:                🥥 "\U1F965"
+# Umbrella:               "\U26F1"
+# Pointing finger:        "\U1F449"
+# Star                   ★ ""
+# triangle               ▶
+# Beer mug:              🍺 "\U1F37A"
+# Coconut with arrow white: "$FG[7] \U1F965 ➤"
+# Coconut with arrow green: "$FG[2] \U1F965 ➤"
+
+_prompt_coconut_entry_symbols=%$F{7}🥥➤
+
+
+function prompt_coconut_precmd {
+  # Replace "/home/<user>" with "~"
+  _prompt_coconut_pwd="${PWD/#$HOME/~}"
+
+  # Get Git repository information.
+  if (( $+functions[git-info] )); then
+    git-info
+  fi
+}
+
+
+function prompt_coconut_setup {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+  prompt_opts=(cr percent sp subst)
+
+  # Load required functions.
+  autoload -Uz vcs_info
+  autoload -Uz add-zsh-hook
+
+  # Add a hook for calling info functions before each command.
+  add-zsh-hook precmd prompt_coconut_precmd
+
+  # Set git-info parameters
+  zstyle ':prezto:module:git:info' verbose 'no'
+  zstyle ':prezto:module:git:info:action' format ' +%s'
+  zstyle ':prezto:module:git:info:branch' format ' %F{8}%b%f'
+  zstyle ':prezto:module:git:info:commit' format ' %F{white}%.7c%f'
+  zstyle ':prezto:module:git:info:indexed' format ' '
+  zstyle ':prezto:module:git:info:unindexed' format ' '
+  zstyle ':prezto:module:git:info:untracked' format ' '
+  zstyle ':prezto:module:git:info:dirty' format ' %F{8}✗%f'
+  zstyle ':prezto:module:git:info:keys' format 'rprompt' '%b%c%s%D'
+
+  # Set editor:info parameters
+  zstyle ':prezto:module:editor:info:completing' format '...'
+  zstyle ':prezto:module:editor:info:keymap:primary' format '%F{7}🥥➤%f'
+
+  # Define prompts.
+  PROMPT='
+  ${_prompt_coconut_pwd}
+  ${editor_info[keymap]}'
+
+  RPROMPT='${git_info[rprompt]}'
+  SPROMPT='zsh: correct %F{1}%R%f to %F{2}%r%f [nyae]? '
+}
+
+prompt_coconut_setup "$@"
