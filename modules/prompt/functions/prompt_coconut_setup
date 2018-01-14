@@ -24,13 +24,12 @@
 # Coconut with arrow white: "$FG[7] \U1F965 ➤"
 # Coconut with arrow green: "$FG[2] \U1F965 ➤"
 
-_prompt_coconut_entry_symbols=%$F{7}🥥➤
-
+_prompt_coconut_white=015
+_prompt_coconut_brown=130
 
 function prompt_coconut_precmd {
-  # Replace "/home/<user>" with "~"
-  _prompt_coconut_pwd="${PWD/#$HOME/~}"
-
+  # Replace '/home/<user>' with '~'.
+  _prompt_coconut_pwd="%F{$_prompt_coconut_brown}${PWD/#$HOME/~}%f"
   # Get Git repository information.
   if (( $+functions[git-info] )); then
     git-info
@@ -46,6 +45,7 @@ function prompt_coconut_setup {
   # Load required functions.
   autoload -Uz vcs_info
   autoload -Uz add-zsh-hook
+
 
   # Add a hook for calling info functions before each command.
   add-zsh-hook precmd prompt_coconut_precmd
@@ -63,14 +63,16 @@ function prompt_coconut_setup {
 
   # Set editor:info parameters
   zstyle ':prezto:module:editor:info:completing' format '...'
-  zstyle ':prezto:module:editor:info:keymap:primary' format '%F{7}🥥➤%f'
+  # zstyle ':prezto:module:editor:info:keymap:primary' format '%F{$_prompt_coconut_white}🥥 ➤ %f'
+  zstyle ':prezto:module:editor:info:keymap:primary' format '%F{$_prompt_coconut_white}🥥  %f'
+
+  _prompt_coconut_pwd=''
 
   # Define prompts.
-  PROMPT='
-  ${_prompt_coconut_pwd}
+  PROMPT='%F{$_prompt_coconut_brown}%D{%H:%M:%S} ${_prompt_coconut_pwd}
   ${editor_info[keymap]}'
 
-  RPROMPT='${git_info[rprompt]}'
+  RPROMPT='%(?:: %F{1}✘ %?) ${git_info[rprompt]}'
   SPROMPT='zsh: correct %F{1}%R%f to %F{2}%r%f [nyae]? '
 }
 
