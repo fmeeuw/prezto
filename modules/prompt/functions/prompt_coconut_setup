@@ -26,6 +26,7 @@
 
 _prompt_coconut_white=015
 _prompt_coconut_brown=130
+_prompt_coconut_green=155
 
 function prompt_coconut_precmd {
   # Replace '/home/<user>' with '~'.
@@ -53,7 +54,7 @@ function prompt_coconut_setup {
   # Set git-info parameters
   zstyle ':prezto:module:git:info' verbose 'no'
   zstyle ':prezto:module:git:info:action' format ' +%s'
-  zstyle ':prezto:module:git:info:branch' format ' %F{8}%b%f'
+  zstyle ':prezto:module:git:info:branch' format ' %F{$_prompt_coconut_green}%b%f'
   zstyle ':prezto:module:git:info:commit' format ' %F{white}%.7c%f'
   zstyle ':prezto:module:git:info:indexed' format ' '
   zstyle ':prezto:module:git:info:unindexed' format ' '
